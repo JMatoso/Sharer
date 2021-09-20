@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#343a40"/>
+    <meta name="msapplication-navbutton-color" content="#343a40"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="#343a40"/>
+
+    <title>@ViewData["Title"] - Sharer</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome/css/v4-shims.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+
+    <!--Loader-->
+    <div id='loader'>
+        <!--Spinner -->
+        <div class="spinner"></div>
+    </div>
+
+    @* <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark fixed-top bg-dark box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="sharing" asp-action="index">Sharer</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="audio">Audio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="compressed">Compressed</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="docs">Docs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="images">Images</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="uploads">Uploads</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="videos">Videos</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header> *@
+    <div class="container p-0 m-0">
+        <main role="main" class="pb-3">
+            <div class="row">
+                <div class="col-md-1">
+                    <div class="bg-dark">
+                        <h1>Hey!</h1>
+                    </div>
+                </div>
+                <div class="col-md-11">
+                    <div>
+                        <div class="py-3 bg-white">
+                            <form class="btn-group w-100">
+                                <input class="form-control w-100" style="border-radius: 0; border: none;" placeholder="Search...">
+                                <button class="btn">
+                                    <span data-feather="search"></span>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="p-2">
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="box-shadow footer text-muted">
+        <div class="container">
+            &copy; 2021 - Sharer 
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/feather.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        //Start loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader')
+            setTimeout(() => {
+                loader.classList.add('fadeOut')
+            }, 300)
+        })
+        
+        feather.replace()
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

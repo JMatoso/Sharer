@@ -1,0 +1,124 @@
+@model Sharer.Models.Directories
+
+@{
+    ViewData["Title"] = "Documents";
+}
+
+<hr>
+<div class="my-2">
+    <h4>@ViewData["Title"]</h4>
+    <span>@Model.Files.Count files found</span>
+</div>
+
+<div class="row">
+    @foreach (var item in Model.Files)
+    {
+       <div class="col-md-4 mt-2">
+            <div class="rounded bg-white p-3 border file">
+                <div class="row">
+                    <div class="col-2">
+                        <div>
+                            <span style="font-size: 2em;">
+                                @if(item.Type == Types.Document)
+                                {
+                                    if(item.DocType == DocTypes.txt)
+                                    {
+                                        <span class="text-muted">
+                                            <i class="fa fa-file" aria-hidden="true"></i>
+                                        </span>
+                                    }
+                                    else if(item.DocType == DocTypes.pdf)
+                                    {
+                                        <span class="text-danger">
+                                            <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                        </span>
+                                    }
+                                    else if(item.DocType == DocTypes.docx)
+                                    {
+                                        <span class="text-primary">
+                                            <i class="fa fa-file-word-o" aria-hidden="true"></i>
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            <i class="fa fa-file-o" aria-hidden="true"></i>
+                                        </span>
+                                    }
+                                }
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div>
+                            <span class="d-block">@Html.DisplayFor(f => item.Title)</span>
+                            <small class="d-block text-muted">
+                                @Html.DisplayFor(f => item.Extension) |
+                                @Html.DisplayFor(f => item.Size) 
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="text-right">
+                            <div class="btn-group dropdown">
+                                <button class="button-option" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span>
+                                        <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                    </span>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdown">
+                                    <button class="dropdown-item" type="button" disabled>
+                                        @Html.DisplayFor(f => item.Title)
+                                    </button>
+                                    <button class="dropdown-item" type="button" disabled>
+                                        @Html.DisplayFor(f => item.Type) | 
+                                        @Html.DisplayFor(f => item.Extension)
+                                    </button>
+                                    <button class="dropdown-item" type="button" disabled>
+                                        @Html.DisplayFor(f => item.Minutes)
+                                    </button>
+                                    <button class="dropdown-item" type="button" disabled>
+                                        @Html.DisplayFor(f => item.Size)
+                                    </button>
+                                    <button class="dropdown-item" type="button" disabled>
+                                        @Html.DisplayFor(f => item.CreationTime)
+                                    </button>
+                                    <button class="dropdown-item" type="button" disabled>
+                                        @Html.DisplayFor(f => item.LastAccessTime)
+                                    </button>
+                                    @if(item.IsReadOnly)
+                                    {
+                                        <button class="dropdown-item" type="button" disabled>
+                                            Read Only
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="delete" asp-route-path="@item.Path" asp-route-returnUrl="/sharing/docs" class="dropdown-item text-danger" type="button">
+                                            Delete
+                                        </a>
+                                    }
+                                    <a href="@item.Path" download="@item.Title" class="dropdown-item text-primary" target="_blank" rel="noopener noreferrer">
+                                        Download
+                                    </a>
+                                    @if(item.IsPlayable)
+                                    {
+                                        <a href="@item.Path" class="dropdown-item text-success" target="_blank" rel="noopener noreferrer">
+                                            Play
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <small class="text-muted">
+                        @Html.DisplayFor(f => item.LastAccessTime) |
+                        @Html.DisplayFor(f => item.Type) 
+                    </small>
+                </div>
+            </div>
+       </div>
+    }
+</div>
