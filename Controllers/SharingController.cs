@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Sharer.Models;
 using Sharer.Options;
 using Sharer.Services;
@@ -117,6 +117,22 @@ namespace Sharer.Controllers
             }
 
             return Redirect(returnUrl);
+        }
+
+        [HttpGet]
+        [Route("/sharing/shared")]
+        public IActionResult Shared(string path)
+        {
+            var file = new FileInfo(Path.Combine(_web.ContentRootPath, "Data/paths.json"));
+            var dirs = new Directories();
+
+            if(file.Exists)
+            {
+                var paths = JsonConvert.DeserializeObject<PathList>(System.IO.File.ReadAllText(file.FullName));
+                dirs = GetDirectories(paths.Paths[1]);
+            }
+
+            return View(dirs);
         }
 
         private Directories GetDirectories(string path)
