@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +15,7 @@ namespace Sharer.Controllers
         private readonly ILogger<SharingController> _logger;
         private readonly SharedFolders _shared;
         private readonly IWebHostEnvironment _web;
+        private DirectoryService _directoryService;
 
         public SharingController(ILogger<SharingController> logger, 
             SharedFolders shared, IWebHostEnvironment web)
@@ -23,6 +23,7 @@ namespace Sharer.Controllers
             _logger = logger;
             _shared = shared;
             _web = web;
+            _directoryService = new DirectoryService(_shared, _web);
         }
 
         [Route("/")]
@@ -31,189 +32,36 @@ namespace Sharer.Controllers
         [Route("/sharing/index")]
         public IActionResult Index()
         {
-            var dirs = GetDirectories(_shared.SharedFolder);
-            return View(dirs);
-        }
-
-        [Route("/sharing/audio")]
-        public IActionResult Audio()
-        {
-            var fileFormats = new FileFormats();
-            var dirs = GetFilterDirectories(_shared.Audio, 
-                f => !fileFormats
-                    .Audio
-                    .Exists(x => x.Equals(f.Extension)));
-
-            return View(dirs);
-        }
-
-        [Route("/sharing/compressed")]
-        public IActionResult Compressed()
-        {
-            var fileFormats = new FileFormats();
-            var dirs = GetFilterDirectories(_shared.Compressed, 
-                f => !fileFormats
-                    .Compressed
-                    .Exists(x => x.Equals(f.Extension)));
-
-            return View(dirs);
-        }
-
-        [Route("/sharing/docs")]
-        public IActionResult Documents()
-        {
-            var fileFormats = new FileFormats();
-            var dirs = GetFilterDirectories(_shared.Documents, 
-                f => !fileFormats
-                    .Documents
-                    .Exists(x => x.Equals(f.Extension)));
-
-            return View(dirs);
-        }
-
-        [Route("/sharing/images")]
-        public IActionResult Images()
-        {
-            var fileFormats = new FileFormats();
-            var dirs = GetFilterDirectories(_shared.Images, 
-                f => !fileFormats
-                    .Images
-                    .Exists(x => x.Equals(f.Extension)));
-
-            return View(dirs);
-        }
-
-        [Route("/sharing/uploads")]
-        public IActionResult Uploads()
-        {
-            var dirs = GetDirectories(_shared.SharedFolder);
-            return View(dirs);
-        }
-
-        [Route("/sharing/videos")]
-        public IActionResult Videos()
-        {
-            var fileFormats = new FileFormats();
-            var dirs = GetFilterDirectories(_shared.Videos, 
-                f => !fileFormats
-                    .Videos
-                    .Exists(x => x.Equals(f.Extension)));
+            var dirs = _directoryService
+                .GetFilesInDirectory(Path.Combine(_web.WebRootPath, _shared.SharedFolder));
 
             return View(dirs);
         }
 
         [HttpGet]
-        [Route("/sharing/delete")]
-        public IActionResult Delete(string path, string returnUrl)
+        [Route("/sharing/folder")]
+        public IActionResult Folder([FromQuery]string folderPath) 
         {
-            if(!string.IsNullOrEmpty(path))
+            string formattedUrl = folderPath.Replace("-", @"\");
+
+            if(_directoryService.Exists(formattedUrl, true))
             {
-                var file = new FileInfo(Path.Combine(_web.WebRootPath, path));
-                if(file.Exists)
-                {
-                    file.Delete();
-                    _logger.LogDebug($"File '{file}' has been deleted.");
-                }
+                var dirs = _directoryService
+                    .GetFilesInDirectory(formattedUrl);
+
+                var splitted = formattedUrl.Split(@"\");
+                ViewBag.Title = splitted[splitted.Length - 1] + " folder";
+
+                return View(dirs);
             }
 
-            return Redirect(returnUrl);
+            return RedirectToAction(nameof(NotFoundAction));
         }
 
-        [HttpGet]
-        [Route("/sharing/shared")]
-        public IActionResult Shared(string path)
+        [Route("/sharing/notfound")]
+        public IActionResult NotFoundAction()
         {
-            var file = new FileInfo(Path.Combine(_web.ContentRootPath, "Data/paths.json"));
-            var dirs = new Directories();
-
-            if(file.Exists)
-            {
-                var paths = JsonConvert.DeserializeObject<PathList>(System.IO.File.ReadAllText(file.FullName));
-                dirs = GetDirectories(paths.Paths[1]);
-            }
-
-            return View(dirs);
-        }
-
-        private Directories GetDirectories(string path)
-        {
-            var filesInTheFolder = Directory.GetFiles(Path.Combine(_web.WebRootPath, path));
-            var dirs = new Directories();
-
-            foreach (var item in filesInTheFolder)
-            {
-                var file = new FileInfo(item);
-                var type = new Types();
-                var docType = new DocTypes();
-                var fileFormats = new FileFormats();
-                bool isPlayable = true;
-
-                if(fileFormats.Audio.Exists(x => x.Equals(file.Extension)))
-                {
-                    type = Types.Audio;
-                }
-                else if(fileFormats.Compressed.Exists(x => x.Equals(file.Extension)))
-                {
-                    type = Types.Compressed;
-                    isPlayable = false;
-                }
-                else if(fileFormats.Documents.Exists(x => x.Equals(file.Extension)))
-                {
-                    type = Types.Document;
-                    docType = Enum.Parse<DocTypes>(file.Extension.Replace(".", ""));
-                    isPlayable = false;
-
-                    if(file.Extension.Equals(".txt") || file.Extension.Equals(".pdf"))
-                    {
-                        isPlayable = true;
-                    }
-                }
-                else if(fileFormats.Images.Exists(x => x.Equals(file.Extension)))
-                {
-                    type = Types.Image;
-                }
-                else if(fileFormats.Videos.Exists(x => x.Equals(file.Extension)))
-                {
-                    type = Types.Video;
-                }
-                else if(fileFormats.Applications.Exists(x => x.Equals(file.Extension)))
-                {
-                    type = Types.Application;
-                    isPlayable = false;
-                }
-                else
-                {
-                    type = Types.Other;
-                    isPlayable = false;
-                }
-
-                dirs.Files.Add(new()
-                {
-                    Title = file.Name.Replace(file.Extension, ""),
-                    Path = item.Replace(_web.WebRootPath, ""),
-                    Type = type,
-                    DocType = docType,
-                    IsPlayable = isPlayable,
-                    Extension = file.Extension,
-                    Minutes = 0,
-                    Size = FileOperationService.ConvertFromBytes(file.Length),
-                    IsReadOnly = file.IsReadOnly,
-                    CreationTime = file.CreationTime,
-                    LastAccessTime = file.LastAccessTime
-                });
-            }
-
-            return dirs;
-        }
-
-        private Directories GetFilterDirectories(string path, Predicate<FileInformation> match)
-        {
-            var dirs = GetDirectories(path);
-
-            dirs.Files
-                .RemoveAll(match);
-
-            return dirs;
+            return View();
         }
 
         [Route("/sharing/error")]

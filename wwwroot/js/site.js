@@ -1,4 +1,9 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿
+function OpenFolder(path){
+    let url = "/sharing/folder?folderPath=" + path.replace("\"", "-")
+    location .href = url
+}
 
-// Write your JavaScript code.
+$("#uploadButton").click(function(){
+    $('#fileInput').trigger('click')
+})

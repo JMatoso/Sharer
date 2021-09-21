@@ -1,24 +1,49 @@
 @model Sharer.Models.Directories
 
-@{
-    ViewData["Title"] = "Documents";
-}
-
 <div class="my-2">
-    <h4>@ViewData["Title"]</h4>
-    <span>@Model.Files.Count files found</span>
+    <h4>
+        Files in
+        @ViewBag.Title
+    </h4>
+    @{
+        var totalFilesCounted = Model.Folders.Count + Model.Files.Count;
+        <span>@totalFilesCounted files found</span>
+    }
 </div>
 
 <div class="row">
+    @foreach (var item in Model.Folders)
+    {   
+        string path = item.Path.Replace('\\', '-');
+
+        <div class="col-md-2 mt-2" onclick="OpenFolder('@path')">
+            <div class="folder">
+                <span>
+                    <i class="fa fa-folder" aria-hidden="true"></i>
+                </span>
+                <h5>@Html.DisplayFor(x => item.Title)</h5>
+            </div>
+        </div>
+    }
+</div>
+
+<hr>
+<div class="row">
     @foreach (var item in Model.Files)
     {
-       <div class="col-md-4 mt-2">
+        <div class="col-md-4 mt-2">
             <div class="rounded bg-white p-3 border file">
                 <div class="row">
                     <div class="col-2">
                         <div>
                             <span style="font-size: 2em;">
-                                @if(item.Type == Types.Document)
+                                @if(item.Type == Types.Audio)
+                                {
+                                    <span class="text-primary">
+                                        <i class="fa fa-music" aria-hidden="true"></i>
+                                    </span>
+                                }
+                                else if(item.Type == Types.Document)
                                 {
                                     if(item.DocType == DocTypes.txt)
                                     {
@@ -44,6 +69,34 @@
                                             <i class="fa fa-file-o" aria-hidden="true"></i>
                                         </span>
                                     }
+                                }
+                                else if(item.Type == Types.Compressed)
+                                {
+                                    <span class="text-info">
+                                        <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+                                    </span>
+                                }
+                                else if(item.Type == Types.Video)
+                                {
+                                    <span class="text-danger">
+                                        <i class="fa fa-video-camera" aria-hidden="true"></i>
+                                    </span>
+                                }
+                                else if(item.Type == Types.Image)
+                                {
+                                    <span class="text-success">
+                                        <i class="fa fa-photo" aria-hidden="true"></i>
+                                    </span>
+                                }
+                                else if(item.Type == Types.Application)
+                                {
+                                    <span class="text-orange">
+                                        <i class="fa fa-puzzle-piece" aria-hidden="true"></i>
+                                    </span>
+                                }
+                                else if(item.Type == Types.Other)
+                                {
+                                    <i class="fa fa-file-o" aria-hidden="true"></i>
                                 }
                             </span>
                         </div>
@@ -93,7 +146,7 @@
                                     }
                                     else
                                     {
-                                        <a asp-action="delete" asp-route-path="@item.Path" asp-route-returnUrl="/sharing/docs" class="dropdown-item text-danger" type="button">
+                                        <a asp-action="delete" asp-route-path="@item.Path" asp-route-returnUrl="/sharing/index" class="dropdown-item text-danger" type="button">
                                             Delete
                                         </a>
                                     }
@@ -118,6 +171,14 @@
                     </small>
                 </div>
             </div>
-       </div>
+        </div>
     }
 </div>
+
+@if(Model.Files.Count < 1 && Model.Folders.Count < 0)
+{
+    <div class="text-center w-100">
+        <h1>Empty folder</h1>
+        <img class="w-100" src="/images/empty.svg" alt="Empty">
+    </div>
+}

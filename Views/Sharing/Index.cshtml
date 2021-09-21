@@ -5,67 +5,33 @@
 }
 
 <div class="my-2">
-    <h4>@ViewData["Title"]</h4>
-    <span>Quick Access</span>
+    <h4>
+        Files in
+        @ViewBag.Title
+    </h4>
+    @{
+        var totalFilesCounted = Model.Folders.Count + Model.Files.Count;
+        <span>@totalFilesCounted files found</span>
+    }
 </div>
 
-<div class="row mb-2">
-    <div class="col-md-2">
-        <div class="folder" onclick="location .href='/sharing/audio'">
-            <span>
-                <i class="fa fa-folder" aria-hidden="true"></i>
-            </span>
-            <h5>Audio</h5>
+<div class="row">
+    @foreach (var item in Model.Folders)
+    {   
+        string path = item.Path.Replace('\\', '-');
+
+        <div class="col-md-2 mt-2" onclick="OpenFolder('@path')">
+            <div class="folder">
+                <span>
+                    <i class="fa fa-folder" aria-hidden="true"></i>
+                </span>
+                <h5>@Html.DisplayFor(x => item.Title)</h5>
+            </div>
         </div>
-    </div>
-    <div class="col-md-2">
-        <div class="folder" onclick="location .href='/sharing/compressed'">
-            <span>
-                <i class="fa fa-folder" aria-hidden="true"></i>
-            </span>
-            <h5>Compressed</h5>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="folder" onclick="location .href='/sharing/docs'">
-            <span>
-                <i class="fa fa-folder" aria-hidden="true"></i>
-            </span>
-            <h5>Documents</h5>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="folder" onclick="location .href='/sharing/images'">
-            <span>
-                <i class="fa fa-folder" aria-hidden="true"></i>
-            </span>
-            <h5>Images</h5>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="folder" onclick="location .href='/sharing/uploads'">
-            <span>
-                <i class="fa fa-folder" aria-hidden="true"></i>
-            </span>
-            <h5>Uploads</h5>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="folder" onclick="location .href='/sharing/videos'">
-            <span>
-                <i class="fa fa-folder" aria-hidden="true"></i>
-            </span>
-            <h5>Videos</h5>
-        </div>
-    </div>
+    }
 </div>
 
 <hr>
-<div class="my-2">
-    <h4>Files</h4>
-    <span>@Model.Files.Count files found</span>
-</div>
-
 <div class="row">
     @foreach (var item in Model.Files)
     {
@@ -212,3 +178,11 @@
         </div>
     }
 </div>
+
+@if(Model.Files.Count < 1 && Model.Folders.Count < 0)
+{
+    <div class="text-center w-100">
+        <h1>Empty folder</h1>
+        <img class="w-100" src="/images/empty.svg" alt="Empty">
+    </div>
+}

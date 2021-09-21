@@ -58,28 +58,27 @@
             </div>
         </nav>
     </header> *@
-    <div class="container p-0 m-0">
+    <div class="container">
         <main role="main" class="pb-3">
-            <div class="row">
-                <div class="col-md-1">
-                    <div class="bg-dark">
-                        <h1>Hey!</h1>
+            <div>
+                <div class="py-3 bg-white btn-group w-100">
+                    <a class="btn text-primary" asp-action="index">
+                        <span data-feather="home"></span>
+                    </a>
+                    <button class="btn text-success" id="uploadButton">
+                        <span data-feather="upload"></span>
+                    </button>
                     </div>
+                    <form class="btn-group w-100">
+                        <input type="file" id="fileInput" name="fileInput"/>
+                        <input class="form-control w-100" style="border-radius: 0; border: none;" placeholder="Search...">
+                        <button class="btn text-dark">
+                            <span data-feather="search"></span>
+                        </button>
+                    </form>
                 </div>
-                <div class="col-md-11">
-                    <div>
-                        <div class="py-3 bg-white">
-                            <form class="btn-group w-100">
-                                <input class="form-control w-100" style="border-radius: 0; border: none;" placeholder="Search...">
-                                <button class="btn">
-                                    <span data-feather="search"></span>
-                                </button>
-                            </form>
-                        </div>
-                        <div class="p-2">
-                            @RenderBody()
-                        </div>
-                    </div>
+                <div class="p-2">
+                    @RenderBody()
                 </div>
             </div>
         </main>

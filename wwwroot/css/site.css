@@ -111,6 +111,8 @@ body {
   transition: ease-in-out all .2s;
 }
 
+.hide {}
+
 .text-orange { color: orange !important; }
 .button-option {
   background-color: transparent;
