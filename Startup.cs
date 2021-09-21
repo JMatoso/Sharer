@@ -1,17 +1,22 @@
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Sharer.Helpers;
 using Sharer.Installers;
+using Sharer.Options;
 
 namespace Sharer
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly SharedFolders _shared;
+        public Startup(IConfiguration configuration, SharedFolders shared)
         {
             Configuration = configuration;
+            _shared = shared;
         }
 
         public IConfiguration Configuration { get; }
@@ -31,10 +36,16 @@ namespace Sharer
             }
             else
             {
-                app.UseExceptionHandler("/Sharing/Error");
+                app.UseExceptionHandler("/sharing/error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            Init.CreateDefaultFolders(new[]
+            {
+                Path.Combine(env.WebRootPath, _shared.SharedFolder)
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
