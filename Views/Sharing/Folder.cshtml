@@ -119,9 +119,7 @@
                                     </span>
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdown">
-                                    <button class="dropdown-item" type="button" disabled>
-                                        @Html.DisplayFor(f => item.Title)
-                                    </button>
+                                    <h6 class="dropdown-header">@Html.DisplayFor(f => item.Title)</h6>
                                     <button class="dropdown-item" type="button" disabled>
                                         @Html.DisplayFor(f => item.Type) | 
                                         @Html.DisplayFor(f => item.Extension)
@@ -138,6 +136,7 @@
                                     <button class="dropdown-item" type="button" disabled>
                                         @Html.DisplayFor(f => item.LastAccessTime)
                                     </button>
+                                    <div class="dropdown-divider"></div>
                                     @if(item.IsReadOnly)
                                     {
                                         <button class="dropdown-item" type="button" disabled>
@@ -147,15 +146,24 @@
                                     else
                                     {
                                         <a asp-action="delete" asp-route-path="@item.Path" asp-route-returnUrl="/sharing/index" class="dropdown-item text-danger" type="button">
+                                            <span>
+                                                <i class="fa fa-trash"></i>
+                                            </span>
                                             Delete
                                         </a>
                                     }
                                     <a href="@item.Path" download="@item.Title" class="dropdown-item text-primary" target="_blank" rel="noopener noreferrer">
+                                        <span>
+                                            <i class="fa fa-download"></i>
+                                        </span>
                                         Download
                                     </a>
                                     @if(item.IsPlayable)
                                     {
                                         <a href="@item.Path" class="dropdown-item text-success" target="_blank" rel="noopener noreferrer">
+                                            <span>
+                                                <i class="fa fa-play"></i>
+                                            </span>
                                             Play
                                         </a>
                                     }

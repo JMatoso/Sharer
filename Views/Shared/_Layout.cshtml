@@ -53,6 +53,12 @@
         <input class="hidden" id="sendFile" type="submit" value="submit" />
     </form>
 
+    <div class="modal-uploading d-none" id="uploadingModal">
+        <div class="uploading">
+            <h1 class="text-muted">Loading file...</h1>
+        </div>
+    </div>
+
     <footer class="box-shadow footer text-muted">
         <div class="container">
             &copy; 2021 - Sharer 
@@ -63,13 +69,7 @@
     <script src="~/js/feather.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-        window.addEventListener('load', () => {
-            const loader = document.getElementById('loader')
-            setTimeout(() => {
-                loader.classList.add('fadeOut')
-            }, 300)
-        })
-        
+        window.addEventListener('load', () => { LoadAnimation() })
         feather.replace()
     </script>
     @await RenderSectionAsync("Scripts", required: false)
