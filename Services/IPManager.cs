@@ -60,17 +60,23 @@ namespace Sharer.Services
         public static string[] GenAppRunAddress()
         {
             string myIp = GetLocalIPAddress();
-            string availablePort = GetAvailablePort()
+            
+            if(!string.IsNullOrEmpty(myIp))
+            {
+                string availablePort = GetAvailablePort()
                 .ToString();
             
-            int port2 = GetAvailablePort(); port2++;
-            string availablePort2 = port2.ToString();
-            
-            return new string[]
-            {
-                $"https://{myIp}:{availablePort}",
-                $"https://{myIp}:{availablePort2}"
-            };
+                int port2 = GetAvailablePort(); port2++;
+                string availablePort2 = port2.ToString();
+                
+                return new string[]
+                {
+                    $"http://{myIp}:{availablePort}",
+                    $"https://{myIp}:{availablePort2}"
+                };
+            }   
+
+            return null;
         }
     }
 }

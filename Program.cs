@@ -11,12 +11,24 @@ namespace Sharer
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            var addresses = IPManager.GenAppRunAddress();
+            if(addresses == null)
+            {
+                addresses = new[]
+                {
+                    "http://localhost:5000",
+                    "https://localhost:5001"
+                };
+            }
+
+            return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls(IPManager.GenAppRunAddress());
+                    webBuilder.UseUrls(addresses);
                 });
+        }
     }
 }
