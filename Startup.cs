@@ -12,11 +12,9 @@ namespace Sharer
 {
     public class Startup
     {
-        private readonly SharedFolders _shared;
-        public Startup(IConfiguration configuration, SharedFolders shared)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _shared = shared;
         }
 
         public IConfiguration Configuration { get; }
@@ -43,7 +41,7 @@ namespace Sharer
 
             Init.CreateDefaultFolders(new[]
             {
-                Path.Combine(env.WebRootPath, _shared.SharedFolder)
+                Path.Combine(env.WebRootPath, "SharedFolders/")
             });
 
             app.UseHttpsRedirection();
