@@ -1,6 +1,4 @@
-using System.IO;
 using ByteSizeLib;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Sharer.Services
 {
