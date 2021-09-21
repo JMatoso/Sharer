@@ -21,7 +21,7 @@
                 <span>
                     <i class="fa fa-folder" aria-hidden="true"></i>
                 </span>
-                <h5>@Html.DisplayFor(x => item.Title)</h5>
+                <h5 class="text-break">@Html.DisplayFor(x => item.Title)</h5>
             </div>
         </div>
     }
@@ -103,7 +103,7 @@
                     </div>
                     <div class="col-8">
                         <div>
-                            <span class="d-block">@Html.DisplayFor(f => item.Title)</span>
+                            <span class="d-block text-break">@Html.DisplayFor(f => item.Title)</span>
                             <small class="d-block text-muted">
                                 @Html.DisplayFor(f => item.Extension) |
                                 @Html.DisplayFor(f => item.Size) 

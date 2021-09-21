@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "File uploaded";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="mt-5">
+            <div>
+                <span class="text-muted">File Name</span>
+                <h4 class="text-break text-success">
+                    @ViewBag.FileName
+                </h4>
+            </div>
+
+            <div>
+                <span class="text-muted">Folder Parent</span>
+                <h5 class="text-break">
+                    @ViewBag.FileLocation
+                </h5>
+            </div>
+
+            @{
+                string path = ViewBag.FileLocation.Replace('\\', '-');
+
+                <div class="m-5 text-center">
+                    <a asp-controller="sharing" asp-action="folder" asp-route-folderPath="@ViewBag.FileLocation" class="btn btn-lg btn-outline-primary rounded">See in Folder</a>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="text-center w-100">
+            <h1>File uploaded</h1>
+            <img class="w-100" src="/images/filesent.svg" alt="File uploaded">
+        </div>
+    </div>
+</div>

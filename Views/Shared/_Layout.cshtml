@@ -16,73 +16,42 @@
 </head>
 <body>
 
-    <!--Loader-->
     <div id='loader'>
-        <!--Spinner -->
         <div class="spinner"></div>
     </div>
 
-    @* <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark fixed-top bg-dark box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="sharing" asp-action="index">Sharer</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="audio">Audio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="compressed">Compressed</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="docs">Docs</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="images">Images</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="uploads">Uploads</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="sharing" asp-action="videos">Videos</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header> *@
     <div class="container">
         <main role="main" class="pb-3">
             <div>
                 <div class="py-3 bg-white btn-group w-100">
-                    <a class="btn text-primary" asp-action="index">
+                    <a class="btn text-primary" asp-action="index" asp-controller="sharing">
                         <span data-feather="home"></span>
                     </a>
                     <button class="btn text-success" id="uploadButton">
                         <span data-feather="upload"></span>
                     </button>
-                    </div>
+                    <button class="btn text-danger">
+                        <span data-feather="folder-plus"></span>
+                    </button>
                     <form class="btn-group w-100">
-                        <input type="file" id="fileInput" name="fileInput"/>
                         <input class="form-control w-100" style="border-radius: 0; border: none;" placeholder="Search...">
                         <button class="btn text-dark">
                             <span data-feather="search"></span>
                         </button>
                     </form>
                 </div>
+
                 <div class="p-2">
                     @RenderBody()
                 </div>
             </div>
         </main>
     </div>
+
+    <form class="d-none" method="post" enctype="multipart/form-data" asp-controller="sharing" asp-action="uploads" >
+        <input type="file" id="fileInput" name="fileInput" onchange="Upload()"/>
+        <input class="hidden" id="sendFile" type="submit" value="submit" />
+    </form>
 
     <footer class="box-shadow footer text-muted">
         <div class="container">
@@ -94,7 +63,6 @@
     <script src="~/js/feather.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
-        //Start loader
         window.addEventListener('load', () => {
             const loader = document.getElementById('loader')
             setTimeout(() => {

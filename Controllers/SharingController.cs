@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Sharer.Models;
 using Sharer.Options;
 using Sharer.Services;
@@ -56,6 +57,21 @@ namespace Sharer.Controllers
             }
 
             return RedirectToAction(nameof(NotFoundAction));
+        }
+
+        [HttpPost]
+        [Route("/sharing/uploads")]
+        public async Task<IActionResult> Uploads(IFormFile fileInput) 
+        {
+            var upload = new UploadService(_web, _shared);
+
+            if(fileInput != null)
+            {
+                ViewBag.FileName = await upload.Upload(fileInput);
+                ViewBag.FileLocation = Path.Combine(_web.WebRootPath, _shared.Uploads.Replace(@"/", @"\"));
+            }
+
+            return View();
         }
 
         [Route("/sharing/notfound")]

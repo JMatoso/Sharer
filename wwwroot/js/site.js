@@ -7,3 +7,8 @@ function OpenFolder(path){
 $("#uploadButton").click(function(){
     $('#fileInput').trigger('click')
 })
+
+function Upload(){
+    console.log("I changed")
+    $('#sendFile').trigger('click')
+}
