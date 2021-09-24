@@ -5,6 +5,7 @@ namespace Sharer.Models
 {
     public class Directories
     {
+        public List<FolderInformation> SharedFolders { get; set; } = new();
         public List<FolderInformation> Folders { get; set; } = new();
         public List<FileInformation> Files { get; set; } = new();
     }

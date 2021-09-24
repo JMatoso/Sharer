@@ -9,18 +9,16 @@ namespace Sharer.Services
 {
     public static class IPManager
     {
-        public static string GetLocalIPAddress()
+        public static List<string> GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
+            var ips = new List<string>();
+
             foreach (var ip in host.AddressList)
-            {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
+                    ips.Add(ip.ToString());
             
-            return string.Empty;
+            return ips == null ? null : ips;
         }
 
         public static int GetAvailablePort(int startingPort = 5000)
@@ -51,29 +49,37 @@ namespace Sharer.Services
             portArray.Sort();
 
             for (int i = startingPort; i < UInt16.MaxValue; i++)
+            {
                 if (!portArray.Contains(i))
                     return i;
+            }
 
             return 0;
         }
 
         public static string[] GenAppRunAddress()
         {
-            string myIp = GetLocalIPAddress();
-            
-            if(!string.IsNullOrEmpty(myIp))
+            var mips = GetLocalIPAddress();
+            var port = GetAvailablePort(); 
+
+            if(mips != null && port != 0)
             {
                 string availablePort = GetAvailablePort()
-                .ToString();
+                    .ToString();
             
-                int port2 = GetAvailablePort(); port2++;
-                string availablePort2 = port2.ToString();
+                var addresses = new List<string>();
+                int count = 1;
                 
-                return new string[]
+                foreach (var ip in mips)
                 {
-                    $"http://{myIp}:{availablePort}",
-                    $"https://{myIp}:{availablePort2}"
-                };
+                    if(count >= 20)
+                        break;
+                    
+                    addresses.Add($"https://{ip}:{port}");
+                    count++;
+                }
+
+                return addresses.ToArray();
             }   
 
             return null;

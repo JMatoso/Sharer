@@ -1,6 +1,10 @@
-{
-    "Paths": 
-    [
-        "C:\\Users\\Matoso\\Documents\\Setups\\"
-    ]
-}
+[
+  {
+    "FolderName": "Videos",
+    "FolderPath": "/home/matoso/Videos"
+  },
+  {
+    "FolderName": "Music",
+    "FolderPath": "/home/matoso/Music"
+  }
+]

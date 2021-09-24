@@ -13,6 +13,11 @@ namespace Sharer.Installlers.Models
             configuration.Bind(nameof(SharedFolders), sharedFolders);
             
             services.AddSingleton(sharedFolders);
+
+            var systemFolders = new SystemFolders();
+            configuration.Bind(nameof(SystemFolders), systemFolders);
+            
+            services.AddSingleton(systemFolders);
         }
     }
 }

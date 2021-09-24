@@ -19,3 +19,21 @@ function Upload(){
     LoadAnimation()
     $('#sendFile').trigger('click')
 }
+
+function SetClipboardText(input){
+    navigator.clipboard.readText()
+        .then(text => {
+            $(input).val(text)
+        })
+        .catch(err => {
+            console.error(err)
+        })
+}
+
+$(window).bind('scroll', function(){
+    if($(window).scrollTop() > 50){
+        $('.custom-nav').addClass("nav-saturated ")
+    }else{
+        $('.custom-nav').removeClass("nav-saturated ")
+    }
+})

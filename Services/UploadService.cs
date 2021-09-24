@@ -18,27 +18,24 @@ namespace Sharer.Services
             _shared = shared;
         }
 
-        public async Task<string> Upload(IFormFile image)
+        public async Task<string> Upload(IFormFile formFile)
         {
             string uniqueFileName = null;
             string filePath = null;
 
-            if(image != null)
+            if(formFile != null)
             {
                 string path = Path.Combine(_web.WebRootPath, _shared.Uploads);
+                var file = new FileInfo(formFile.FileName);
+
                 string genNewName = Guid.NewGuid().ToString().Replace("-", "");
 
-                int dotPosition = image.FileName.IndexOf('.');
-                int finalLength = image.FileName.Length - dotPosition;
-                
-                string fileExt = image.FileName.Substring(dotPosition, finalLength);
-
-                uniqueFileName = $"{genNewName}{fileExt}";
+                uniqueFileName = $"{genNewName}{file.Extension}";
                 filePath = Path.Combine(path, uniqueFileName);
 
                 using(var fs = new FileStream(filePath, FileMode.Create))
                 {
-                    await image.CopyToAsync(fs);
+                    await formFile.CopyToAsync(fs);
                 }
             }
 

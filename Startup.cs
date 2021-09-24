@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sharer.Helpers;
 using Sharer.Installers;
-using Sharer.Options;
 
 namespace Sharer
 {

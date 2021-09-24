@@ -1,0 +1,30 @@
+@{
+    ViewData["Title"] = "File uploaded";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="mt-5">
+            <div>
+                <span class="text-muted">Folder Name</span>
+                <h4 class="text-break text-success">
+                    @ViewBag.FolderName
+                </h4>
+            </div>
+
+            <div>
+                <span class="text-muted">Folder Path</span>
+                <h5 class="text-break">
+                    @ViewBag.FolderPath
+                </h5>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="text-center w-100">
+            <h1>File uploaded</h1>
+            <img class="w-100" src="/images/filesent.svg" alt="File uploaded">
+        </div>
+    </div>
+</div>
