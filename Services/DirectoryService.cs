@@ -75,35 +75,35 @@ namespace Sharer.Services
                 var fileFormats = new FileFormats();
                 bool isPlayable = true;
 
-                if(fileFormats.Audio.Exists(x => x.Equals(file.Extension)))
+                if(fileFormats.Audio.Exists(x => x.Equals(file.Extension.ToLower())))
                 {
                     type = Types.Audio;
                 }
-                else if(fileFormats.Compressed.Exists(x => x.Equals(file.Extension)))
+                else if(fileFormats.Compressed.Exists(x => x.Equals(file.Extension.ToLower())))
                 {
                     type = Types.Compressed;
                     isPlayable = false;
                 }
-                else if(fileFormats.Documents.Exists(x => x.Equals(file.Extension)))
+                else if(fileFormats.Documents.Exists(x => x.Equals(file.Extension.ToLower())))
                 {
                     type = Types.Document;
                     docType = Enum.Parse<DocTypes>(file.Extension.Replace(".", ""));
                     isPlayable = false;
 
-                    if(file.Extension.Equals(".txt") || file.Extension.Equals(".pdf"))
+                    if(file.Extension.ToLower().Equals(".txt") || file.Extension.ToLower().Equals(".pdf"))
                     {
                         isPlayable = true;
                     }
                 }
-                else if(fileFormats.Images.Exists(x => x.Equals(file.Extension)))
+                else if(fileFormats.Images.Exists(x => x.Equals(file.Extension.ToLower())))
                 {
                     type = Types.Image;
                 }
-                else if(fileFormats.Videos.Exists(x => x.Equals(file.Extension)))
+                else if(fileFormats.Videos.Exists(x => x.Equals(file.Extension.ToLower())))
                 {
                     type = Types.Video;
                 }
-                else if(fileFormats.Applications.Exists(x => x.Equals(file.Extension)))
+                else if(fileFormats.Applications.Exists(x => x.Equals(file.Extension.ToLower())))
                 {
                     type = Types.Application;
                     isPlayable = false;
