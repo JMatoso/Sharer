@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Sharer.Helpers;
 
 namespace Sharer.Models
 {
@@ -8,6 +9,7 @@ namespace Sharer.Models
         public List<FolderInformation> SharedFolders { get; set; } = new();
         public List<FolderInformation> Folders { get; set; } = new();
         public List<FileInformation> Files { get; set; } = new();
+        public UrlParser UrlParser { get; } = new();
     }
 
     public class FolderInformation

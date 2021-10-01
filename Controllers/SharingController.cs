@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Sharer.Helpers;
 using Sharer.Models;
 using Sharer.Options;
 using Sharer.Services;
@@ -79,17 +80,20 @@ namespace Sharer.Controllers
         [Route("/sharing/folder")]
         public IActionResult Folder([FromQuery]string folderPath) 
         {
-            string formattedUrl = folderPath.Replace("-", "\\");
-
-            if(_directoryService.Exists(formattedUrl, true))
+            if(!string.IsNullOrEmpty(folderPath))
             {
-                var dirs = _directoryService
-                    .GetFilesInDirectory(formattedUrl);
+                string formattedUrl = (new UrlParser()).Base64Decode(folderPath);
 
-                var splitted = formattedUrl.Split("\\");
-                ViewBag.Title = splitted[splitted.Length - 1] + " folder";
+                if(_directoryService.Exists(formattedUrl, true))
+                {
+                    var dirs = _directoryService
+                        .GetFilesInDirectory(formattedUrl);
 
-                return View(dirs);
+                    var splitted = formattedUrl.Split("\\");
+                    ViewBag.Title = splitted[splitted.Length - 1] + " folder";
+
+                    return View(dirs);
+                }
             }
 
             return RedirectToAction(nameof(NotFoundAction));
@@ -116,6 +120,8 @@ namespace Sharer.Controllers
         {
             if(!string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(name))
             {
+                path = (new UrlParser()).Base64Decode(path);
+                
                 if(_directoryService.Exists(path, true))
                 {    
                     string pathsFolder = Path.Combine(_web.ContentRootPath, _sys.PathsData);
