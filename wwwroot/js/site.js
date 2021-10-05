@@ -5,6 +5,19 @@
     }, 300)
 }
 
+function ShowToast(message, status = "success", dismissible = true){
+    SnackBar({
+        position: "bl",
+        timeout: 5000,
+        status: status,
+        dismissible: dismissible,
+        speed: 500,
+        message: message,
+        fixed: true,
+        width: "auto"
+    });
+}
+
 function OpenFolder(path){
     let url = "/sharing/folder?folderPath=" + path.replace("\"", "-")
     location .href = url
@@ -24,6 +37,7 @@ function SetClipboardText(input){
     navigator.clipboard.readText()
         .then(text => {
             $(input).val(text)
+            ShowToast("Pasted!", "info")
         })
         .catch(err => {
             console.error(err)

@@ -4,5 +4,6 @@ namespace Sharer.Options
     {
         public string PathsData { get; set; }
         public string UserInfoData { get; set; }
+        public string Certificates { get; set; }
     }
 }

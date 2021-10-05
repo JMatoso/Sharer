@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using Newtonsoft.Json;
 
 namespace Sharer.Services
 {
@@ -77,6 +78,9 @@ namespace Sharer.Services
                     
                     addresses.Add($"https://{ip}:{port}");
                     count++;
+
+                    // var cert = JsonConvert.SerializeObject(CertificateService.CreateSelfSignedCertificate(ip), Formatting.Indented);
+                    // FileOperationService.SaveFile(cert, "/Certs");
                 }
 
                 return addresses.ToArray();

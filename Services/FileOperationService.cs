@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using ByteSizeLib;
 using Newtonsoft.Json;
@@ -15,24 +14,15 @@ namespace Sharer.Services
         }
 
         public static string ConvertFromBytes(long fileBytes) 
-        {
-           return ByteSize.FromBytes(fileBytes)
-            .ToString();
-        }
+            => ByteSize.FromBytes(fileBytes).ToString();
 
         public static string ReadFile(string path)
-        {
-            if(System.IO.File.Exists(path))
-            {
-                return File.ReadAllText(path);
-            }
+            => File.Exists(path) ? File.ReadAllText(path) : null;
 
-            return null;
-        }
-
-        public static void SaveFile(string content, string path)
+        public static void SaveFile(object content, string path)
         {
-            File.WriteAllText(path, content);
+            var data = JsonConvert.SerializeObject(content, Formatting.Indented);
+            File.WriteAllText(path, data);
         }
     }
 }
