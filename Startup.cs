@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Sharer.Helpers;
 using Sharer.Installers;
+using Sharer.Services;
 
 namespace Sharer
 {
@@ -64,6 +65,7 @@ namespace Sharer
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Sharing}/{action=Index}/{id?}");
+                endpoints.MapHub<AppHub>("/appHub");
             });
         }
     }

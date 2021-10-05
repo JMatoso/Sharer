@@ -9,9 +9,7 @@ namespace Sharer.Helpers
             foreach (var path in paths)
             {
                 if(!Directory.Exists(path))
-                {
                     Directory.CreateDirectory(path);
-                }
             }
         }
     }

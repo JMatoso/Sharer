@@ -16,6 +16,7 @@ namespace Sharer.Installlers.Models
             }).AddRazorRuntimeCompilation();
 
             services.AddHttpContextAccessor();
+            services.AddSignalR().AddMessagePackProtocol();
             services.AddMvc(options => 
             { 
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
