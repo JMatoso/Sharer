@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -106,6 +107,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/feather/feather.min.js"></script>
     <script src="~/js/js-snackbar-master/js-snackbar.js"></script>
+    <script src="~/js/signalr/signalr.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script>
         window.addEventListener('load', () => { LoadAnimation() })
@@ -120,6 +122,11 @@
 
         feather.replace()
     </script>
+    @{
+        <script>
+            window.addEventListener('load', () => { StartHub("https://@Context.Request.Host.Value") })
+        </script>
+    }
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

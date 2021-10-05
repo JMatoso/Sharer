@@ -40,7 +40,7 @@ namespace Sharer.Controllers
         {
             var dirs = _directoryService
                 .GetFilesInDirectory(Path.Combine(_web.WebRootPath, _shared.SharedFolder));
-
+            
             string pathsFolder = Path.Combine(_web.ContentRootPath, _sys.PathsData);
             if(_directoryService.Exists(pathsFolder))
             {
