@@ -22,9 +22,7 @@ a.navbar-brand {
 }
 
 /* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
-}
+a { color: #0366d6; }
 
 .btn-primary {
   color: #fff;
@@ -40,25 +38,18 @@ a {
 
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
-  font-size: 14px;
-}
+html { font-size: 14px; }
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
   }
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
+.border-top { border-top: 1px solid #e5e5e5; }
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
 
 button.accept-policy {
   font-size: 1rem;
@@ -146,7 +137,8 @@ body {
   user-select: none;
   backdrop-filter: saturate(180%) blur(20px);
 }
-.custom-nav { transition: cubic-bezier(0.075, 0.82, 0.165, 0.15); }
+
+.custom-nav { transition: .25s; }
 
 .feather-10 { width: 14px !important; height: 14px !important; }
 .feather-bg { width: 48px !important; height: 48px !important; }

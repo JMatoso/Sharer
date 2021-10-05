@@ -89,8 +89,8 @@ namespace Sharer.Controllers
                     var dirs = _directoryService
                         .GetFilesInDirectory(formattedUrl);
 
-                    var splitted = formattedUrl.Split("\\");
-                    ViewBag.Title = splitted[splitted.Length - 1] + " folder";
+                    var splitted = formattedUrl.Split(formattedUrl.Contains("\\") ? "\\" : "/");
+                    ViewBag.Title = $"\"{splitted[splitted.Length - 1]}\" folder";
 
                     return View(dirs);
                 }
@@ -131,9 +131,7 @@ namespace Sharer.Controllers
                         .ReadFile(pathsFolder);
 
                     if(content != null)
-                    {
                         pathsSaved = JsonConvert.DeserializeObject<List<SavedPath>>(content);
-                    }
 
                     pathsSaved.Add(new()
                     {
@@ -141,8 +139,7 @@ namespace Sharer.Controllers
                         FolderPath = path
                     });
 
-                    content = JsonConvert.SerializeObject(pathsSaved, Formatting.Indented);
-                    FileOperationService.SaveFile(content, pathsFolder);
+                    FileOperationService.SaveFile(pathsSaved, pathsFolder);
                     
                     ViewBag.FolderName = name;
                     ViewBag.FolderPath = path;
@@ -155,16 +152,10 @@ namespace Sharer.Controllers
         }
 
         [Route("/sharing/notfound")]
-        public IActionResult NotFoundAction()
-        {
-            return View();
-        }
+        public IActionResult NotFoundAction() => View();
 
         [Route("/sharing/error")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        public IActionResult Error() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

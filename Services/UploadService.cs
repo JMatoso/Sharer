@@ -34,9 +34,7 @@ namespace Sharer.Services
                 filePath = Path.Combine(path, uniqueFileName);
 
                 using(var fs = new FileStream(filePath, FileMode.Create))
-                {
                     await formFile.CopyToAsync(fs);
-                }
             }
 
             return uniqueFileName;

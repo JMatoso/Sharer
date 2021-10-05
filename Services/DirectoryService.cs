@@ -21,16 +21,12 @@ namespace Sharer.Services
             if(fileOrFolder)
             {
                 if(Directory.Exists(path))
-                {
                     return true;
-                }
             }  
             else
             {
                 if(File.Exists(path))
-                {
                     return true;
-                }
             }
 
             return false;
@@ -38,7 +34,9 @@ namespace Sharer.Services
 
         public Directories GetDirectories(string path)
         {
-            var foldersInDirectory = Directory.GetDirectories(Path.Combine(_web.WebRootPath, path));
+            var foldersInDirectory = Directory
+                .GetDirectories(Path.Combine(_web.WebRootPath, path));
+                
             var dirs = new Directories();
 
             foreach (var item in foldersInDirectory)
@@ -76,9 +74,7 @@ namespace Sharer.Services
                 bool isPlayable = true;
 
                 if(fileFormats.Audio.Exists(x => x.Equals(file.Extension.ToLower())))
-                {
                     type = Types.Audio;
-                }
                 else if(fileFormats.Compressed.Exists(x => x.Equals(file.Extension.ToLower())))
                 {
                     type = Types.Compressed;
@@ -91,18 +87,12 @@ namespace Sharer.Services
                     isPlayable = false;
 
                     if(file.Extension.ToLower().Equals(".txt") || file.Extension.ToLower().Equals(".pdf"))
-                    {
                         isPlayable = true;
-                    }
                 }
                 else if(fileFormats.Images.Exists(x => x.Equals(file.Extension.ToLower())))
-                {
                     type = Types.Image;
-                }
                 else if(fileFormats.Videos.Exists(x => x.Equals(file.Extension.ToLower())))
-                {
                     type = Types.Video;
-                }
                 else if(fileFormats.Applications.Exists(x => x.Equals(file.Extension.ToLower())))
                 {
                     type = Types.Application;
@@ -117,7 +107,10 @@ namespace Sharer.Services
                 dirs.Files.Add(new()
                 {
                     Title = file.Name.Replace(file.Extension, ""),
-                    Path = item.Replace(_web.WebRootPath, ""),
+                    Path = file.FullName.Contains(_shared.SharedFolder) || 
+                        file.FullName.Contains(_shared.Uploads) ? 
+                        file.FullName.Replace(_web.WebRootPath, "") :
+                        file.FullName,
                     Type = type,
                     DocType = docType,
                     IsPlayable = isPlayable,
