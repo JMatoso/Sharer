@@ -51,6 +51,7 @@ var connection = null
 function StartHub(addr){
     connection = new signalR.HubConnectionBuilder()
         .withUrl(addr + "/appHub")
+        .withHubProtocol(new signalR.protocols.msgpack.MessagePackHubProtocol())
         .configureLogging(signalR.LogLevel.Information)
         .build()
         
