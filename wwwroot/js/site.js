@@ -1,11 +1,13 @@
-﻿function LoadAnimation() {
+﻿"use strict";
+
+function LoadAnimation() {
     const loader = document.getElementById('loader')
     setTimeout(() => {
         loader.classList.add('fadeOut')
     }, 300)
 }
 
-function ShowToast(message, status = "success", dismissible = true){
+function ShowToast(message, status = "info", dismissible = true){
     SnackBar({
         position: "bl",
         timeout: 5000,
@@ -22,16 +24,6 @@ function OpenFolder(path){
     let url = "/sharing/folder?folderPath=" + path.replace("\"", "-")
     location .href = url
 } 
-
-$("#uploadButton").click(function(){
-    $('#fileInput').trigger('click')
-})
-
-function Upload(){
-    $("#uploadingModal").removeClass("d-none")
-    LoadAnimation()
-    $('#sendFile').trigger('click')
-}
 
 function SetClipboardText(input){
     navigator.clipboard.readText()
@@ -54,9 +46,10 @@ $(window).bind('scroll', function(){
 
 /* SignalR
 -------------------------------------------------- */
+var connection = null
 
 function StartHub(addr){
-    const connection = new signalR.HubConnectionBuilder()
+    connection = new signalR.HubConnectionBuilder()
         .withUrl(addr + "/appHub")
         .configureLogging(signalR.LogLevel.Information)
         .build()
@@ -64,7 +57,6 @@ function StartHub(addr){
     async function start(){
         try{
             await connection.start()
-            ShowToast("Connected to Hub!", "success")
         }catch(err){
             console.log(err)
             setTimeout(start, 5000)
@@ -73,4 +65,32 @@ function StartHub(addr){
 
     connection.onclose(async () => { await start() })
     start()
+
+    connection.on('BadRequest', (message) => {
+        ShowToast(message, "danger")
+    });
+
+    connection.on('Successful', (message, addData) => {
+        ShowToast(message, "success")
+    });
+}
+
+$("#saveFolder").click(function(){
+    let folderName = $("#folderName").val()
+    let folderPath = $("#folderPath").val()
+
+    connection.invoke('SaveFolderAsync', folderPath, folderName).catch(err => console.error(err.toString()))
+})
+
+$("#uploadButton").click(function(){
+    $('#fileInput').trigger('click')
+})
+
+function Upload(){
+    $('#sendFile').trigger('click')
+
+    var data = new FormData()
+
+    data.append("data", $("#fileInput")[0].files[0])
+    connection.invoke('UploadAsync', data).catch(err => console.error(err.toString()))
 }

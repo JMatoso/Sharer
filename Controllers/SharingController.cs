@@ -114,43 +114,6 @@ namespace Sharer.Controllers
             return View();
         }
 
-        [HttpGet]
-        [Route("/sharing/savefolder")]
-        public IActionResult SaveFolder(string path, string name)
-        {
-            if(!string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(name))
-            {
-                path = (new UrlParser()).Base64Decode(path);
-                
-                if(_directoryService.Exists(path, true))
-                {    
-                    string pathsFolder = Path.Combine(_web.ContentRootPath, _sys.PathsData);
-
-                    var pathsSaved = new List<SavedPath>();
-                    var content = FileOperationService
-                        .ReadFile(pathsFolder);
-
-                    if(content != null)
-                        pathsSaved = JsonConvert.DeserializeObject<List<SavedPath>>(content);
-
-                    pathsSaved.Add(new()
-                    {
-                        FolderName = name,
-                        FolderPath = path
-                    });
-
-                    FileOperationService.SaveFile(pathsSaved, pathsFolder);
-                    
-                    ViewBag.FolderName = name;
-                    ViewBag.FolderPath = path;
-
-                    return View();
-                }
-            }
-
-            return RedirectToAction(nameof(NotFoundAction));
-        }
-
         [Route("/sharing/notfound")]
         public IActionResult NotFoundAction() => View();
 
