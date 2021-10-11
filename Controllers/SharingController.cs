@@ -114,6 +114,29 @@ namespace Sharer.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Route("/sharing/play")]
+        public IActionResult Play([FromQuery]string file)
+        {
+            if(!string.IsNullOrEmpty(file))
+            {
+                string formattedUrl = (new UrlParser()).Base64Decode(file);
+
+                if(_directoryService.Exists(formattedUrl))
+                {
+                    using(var fs = System.IO.File.Open(formattedUrl, FileMode.Open, FileAccess.Write, FileShare.None))
+                    {
+                        return View(new FileInformation
+                        {
+                            
+                        });
+                    } 
+                }
+            }
+
+            return RedirectToAction(nameof(NotFoundAction));
+        }
+
         [Route("/sharing/notfound")]
         public IActionResult NotFoundAction() => View();
 
