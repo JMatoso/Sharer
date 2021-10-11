@@ -115,36 +115,22 @@ namespace Sharer.Controllers
         }
 
         [HttpGet]
-        [Route("/sharing/savefolder")]
-        public IActionResult SaveFolder(string path, string name)
+        [Route("/sharing/play")]
+        public IActionResult Play([FromQuery]string file)
         {
-            if(!string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(name))
+            if(!string.IsNullOrEmpty(file))
             {
-                path = (new UrlParser()).Base64Decode(path);
-                
-                if(_directoryService.Exists(path, true))
-                {    
-                    string pathsFolder = Path.Combine(_web.ContentRootPath, _sys.PathsData);
+                string formattedUrl = (new UrlParser()).Base64Decode(file);
 
-                    var pathsSaved = new List<SavedPath>();
-                    var content = FileOperationService
-                        .ReadFile(pathsFolder);
-
-                    if(content != null)
-                        pathsSaved = JsonConvert.DeserializeObject<List<SavedPath>>(content);
-
-                    pathsSaved.Add(new()
+                if(_directoryService.Exists(formattedUrl))
+                {
+                    using(var fs = System.IO.File.Open(formattedUrl, FileMode.Open, FileAccess.Write, FileShare.None))
                     {
-                        FolderName = name,
-                        FolderPath = path
-                    });
-
-                    FileOperationService.SaveFile(pathsSaved, pathsFolder);
-                    
-                    ViewBag.FolderName = name;
-                    ViewBag.FolderPath = path;
-
-                    return View();
+                        return View(new FileInformation
+                        {
+                            
+                        });
+                    } 
                 }
             }
 
