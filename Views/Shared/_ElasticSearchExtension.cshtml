@@ -1,0 +1,76 @@
+@using Newtonsoft.Json
+@model Sharer.Models.Directories
+
+
+
+<script>
+
+"use strict";
+
+var folders = null
+var files = null
+
+function RetrieveData(jsonFolders, jsonFiles){ 
+    folders = jsonFolders
+    files = jsonFiles
+
+    console.log(folders)
+    console.log(files)
+}
+
+var filesPlace = document.getElementById("filesPlace")
+var foldersPlace = document.getElementById("foldersPlace")
+var pageTitle = document.getElementById("pageTitle")
+var pageTotalCounts = document.getElementById("pageTotalCounts")
+
+function Search(input){
+
+    let key = input.value
+    let foldersResults 
+    let filesResults 
+
+    if(key.length > 0)
+    {
+        pageTitle.innerHTML = "Results for \"" + key + "\""
+        foldersResults = folders.filter((e) => e.Title.includes(key))
+        filesResults = files.filter((e) => e.Title.includes(key))
+    }
+    else
+    {
+        pageTitle.innerHTML = "Files in @ViewData["Title"]"
+        foldersResults = folders
+        filesResults = files
+    }
+    
+    console.log(foldersResults)
+    console.log(filesResults)
+
+    let f1Places
+
+    for (const e of foldersResults) {
+        if(f1Places == null)
+            f1Places = "<div class='col-md-2 mt-2' onclick='OpenFolder('path')'>"
+        else
+            f1Places += "<div class='col-md-2 mt-2' onclick='OpenFolder('path')'>"
+
+        f1Places += "<div class='folder'>"
+        f1Places += '<span><span class="feather-bg" data-feather="folder"></span></span>' 
+        f1Places += "<h6 class='text-break'>" + e.Title + "</h6></div>"
+        f1Places += "</div>"
+    }
+    
+    pageTotalCounts.innerHTML = foldersResults.length + filesResults.length + " file(s) found"
+    foldersPlace.innerHTML = f1Places  
+    feather.replace()          
+}
+
+</script>
+
+@{
+    var folders = JsonConvert.SerializeObject(Model.Folders.ToArray(), Formatting.None);
+    var files = JsonConvert.SerializeObject(Model.Files.ToArray(), Formatting.None);
+}
+
+<script>
+    RetrieveData(JSON.parse(@Html.Raw(Json.Serialize(folders))), JSON.parse(@Html.Raw(Json.Serialize(files))))
+</script>

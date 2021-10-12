@@ -1,17 +1,17 @@
 @model Sharer.Models.Directories
 
 <div class="my-2">
-    <h4 class="text-break">
+    <h4 class="text-break" id="pageTitle">
         Files in
         @ViewBag.Title
     </h4>
     @{
         var totalFilesCounted = Model.Folders.Count + Model.Files.Count;
-        <span>@totalFilesCounted file(s) found</span>
+        <span id="pageTotalCounts">@totalFilesCounted file(s) found</span>
     }
 </div>
 
-<div class="row">
+<div class="row" id="foldersPlace">
     @foreach (var item in Model.Folders)
     {   
         string path = Model.UrlParser.Base64Encode(item.Path);
@@ -28,7 +28,7 @@
 </div>
 
 <hr>
-<div class="row">
+<div class="row" id="filesPlace">
     @foreach (var item in Model.Files)
     {
         <div class="col-md-4 mt-2">

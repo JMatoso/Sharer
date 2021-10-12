@@ -95,6 +95,46 @@ namespace Sharer.Services
             await Clients.All.BadRequest("Fill all required fields.");
         }
 
+        public Directories RetrieveData()
+        {
+            var dirs = _directoryService
+                .GetFilesInDirectory(Path.Combine(_web.WebRootPath, _shared.SharedFolder));
+            
+            string pathsFolder = Path.Combine(_web.ContentRootPath, _sys.PathsData);
+            if(_directoryService.Exists(pathsFolder))
+            {
+                var pathsSaved = new List<SavedPath>();
+                var content = FileOperationService
+                    .ReadFile(pathsFolder);
+
+                if(content != null)
+                {
+                    pathsSaved = JsonConvert.DeserializeObject<List<SavedPath>>(content);
+
+                    foreach (var item in pathsSaved)
+                    {
+                        var folder = new DirectoryInfo(item.FolderPath);
+
+                        if(_directoryService.Exists(pathsFolder))
+                        {
+                            dirs.SharedFolders.Add(new FolderInformation()
+                            {
+                                Title = folder.Name,
+                                Path = folder.FullName,
+                                Size = string.Empty,
+                                IsReadOnly = false,
+                                Root = folder.Root.FullName,
+                                CreationTime = folder.CreationTime,
+                                LastAccessTime = folder.LastAccessTime
+                            });
+                        }
+                    }
+                }
+            }
+
+            return dirs;
+        }
+
         public override async Task OnConnectedAsync()
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, "SharerHub");

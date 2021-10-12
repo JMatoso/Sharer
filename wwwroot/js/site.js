@@ -38,7 +38,7 @@ function SetClipboardText(input){
 }
 
 $(window).bind('scroll', () => {
-    if($(window).scrollTop() > 50){
+    if($(window).scrollTop() > 20){
         $('.custom-nav').addClass("nav-saturated ")
     }else{
         $('.custom-nav').removeClass("nav-saturated ")
@@ -96,3 +96,4 @@ function Upload(){
         ShowToast("Something went wrong, try again!", "danger")
     })
 }
+
