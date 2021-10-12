@@ -7,26 +7,15 @@ function LoadAnimation() {
     }, 300)
 }
 
-function ShowToast(message, status = "info", dismissible = true, duration = 5000){
-    // SnackBar({
-    //     position: "bl",
-    //     timeout: 5000,
-    //     status: status,
-    //     dismissible: dismissible,
-    //     speed: 500,
-    //     message: message,
-    //     fixed: true,
-    //     width: "auto"
-    // });
-
+function ShowToast(message, status = "#FFFFFF", dismissible = true, duration = 5000){
     Snackbar.show({ 
-        actionTextColor: '#ff0000', 
+        actionTextColor: status, 
         pos: 'bottom-left',
         text: message,
         actionText: 'Dismiss',
         width: 'auto',
         duration: duration,
-        textColor: '#FFFFFF',
+        textColor: status,
         showAction: dismissible,
         backgroundColor: '#323232'
     });
@@ -49,7 +38,7 @@ function SetClipboardText(input){
 }
 
 $(window).bind('scroll', () => {
-    if($(window).scrollTop() > 50){
+    if($(window).scrollTop() > 20){
         $('.custom-nav').addClass("nav-saturated ")
     }else{
         $('.custom-nav').removeClass("nav-saturated ")
@@ -107,3 +96,4 @@ function Upload(){
         ShowToast("Something went wrong, try again!", "danger")
     })
 }
+

@@ -33,12 +33,12 @@
                 <button class="btn text-danger" data-toggle="modal" data-target="#sharerModal">
                     <span data-feather="folder-plus"></span>
                 </button>
-                <form class="btn-group w-100">
-                    <input class="form-control w-100 bg-transparent" style="border-radius: 0; border: none;" placeholder="Search...">
+                <div class="btn-group w-100">
+                    <input class="form-control w-100 bg-transparent" style="border-radius: 0; border: none;" onchange="Search(this)" placeholder="Search...">
                     <button class="btn text-dark" data-toggle="tooltip" data-placement="top" title="" data-original-title="Search">
                         <span data-feather="search"></span>
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     </header>
@@ -56,12 +56,6 @@
         <input class="hidden" id="sendFile" type="submit" value="submit" />
     </div>
 
-    <div class="modal-uploading d-none" id="uploadingModal">
-        <div class="uploading">
-            <h1 class="text-muted">Loading file...</h1>
-        </div>
-    </div>
-
     <div class="modal fade" id="sharerModal" tabindex="-1" role="dialog" aria-labelledby="sharerModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -71,27 +65,25 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <!--form asp-action="savefolder" asp-controller="sharing" method="get"-->
-                    <div class="modal-body">
-                        <div>
-                            <label class="text-muted d-block">Folder Name</label>
-                            <input class="form-control" type="text" name="name" id="folderName" required placeholder="Eg.: Videos">
-                        </div>
-                        <div class="mt-3">
-                            <label class="text-muted d-block">Path</label>
-                            <div class="btn-group w-100">
-                                <input class="form-control w-100" type="text" name="path" required id="folderPath" placeholder="Paste here the full path..." style="border-bottom-right-radius: 0; border-top-right-radius: 0;">
-                                <a onclick="SetClipboardText('#folderPath')" href="#paste" class="btn btn-sm btn-outline-light text-muted border" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Paste from clipboard">
-                                    <span data-feather="clipboard"></span>
-                                </a>
-                            </div>
+                <div class="modal-body">
+                    <div>
+                        <label class="text-muted d-block">Folder Name</label>
+                        <input class="form-control" type="text" name="name" id="folderName" required placeholder="Eg.: Videos">
+                    </div>
+                    <div class="mt-3">
+                        <label class="text-muted d-block">Path</label>
+                        <div class="btn-group w-100">
+                            <input class="form-control w-100" type="text" name="path" required id="folderPath" placeholder="Paste here the full path..." style="border-bottom-right-radius: 0; border-top-right-radius: 0;">
+                            <a onclick="SetClipboardText('#folderPath')" href="#paste" class="btn btn-sm btn-outline-light text-muted border" style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="" data-original-title="Paste from clipboard">
+                                <span data-feather="clipboard"></span>
+                            </a>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" id="saveFolder" class="btn btn-primary">Save path</button>
-                    </div>
-                <!--/form-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" id="saveFolder" class="btn btn-primary">Save path</button>
+                </div>
             </div>
         </div>
     </div>

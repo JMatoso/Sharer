@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Sharer.Models;
 using Sharer.Options;
@@ -54,6 +55,9 @@ namespace Sharer.Services
                     LastAccessTime = folder.LastAccessTime
                 });
             }
+
+            dirs.Folders.OrderBy(f => f.Title);
+            dirs.Files.OrderBy(f => f.Title);
 
             return dirs;
         }
@@ -123,6 +127,9 @@ namespace Sharer.Services
                 });
             }
 
+            dirs.Folders.OrderBy(f => f.Title);
+            dirs.Files.OrderBy(f => f.Title);
+
             return dirs;
         }
 
@@ -133,6 +140,9 @@ namespace Sharer.Services
             dirs.Files
                 .RemoveAll(match);
 
+            dirs.Folders.OrderBy(f => f.Title);
+            dirs.Files.OrderBy(f => f.Title);
+            
             return dirs;
         }
     }
