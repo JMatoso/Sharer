@@ -116,7 +116,7 @@ namespace Sharer.Controllers
 
         [HttpGet]
         [Route("/sharing/play")]
-        public IActionResult Play([FromQuery]string file)
+        public async Task<IActionResult> Play([FromQuery]string file)
         {
             if(!string.IsNullOrEmpty(file))
             {
@@ -124,13 +124,21 @@ namespace Sharer.Controllers
 
                 if(_directoryService.Exists(formattedUrl))
                 {
-                    using(var fs = System.IO.File.Open(formattedUrl, FileMode.Open, FileAccess.Write, FileShare.None))
+                    var accessedFile = new FileInfo(formattedUrl);
+                    var tmpFileName = 
+                        Path.Combine(_web.WebRootPath, _shared.TempFolder, System.Guid.NewGuid() + accessedFile.Extension);
+
+                    using(var fs = new FileStream(tmpFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                     {
-                        return View(new FileInformation
+                        using(var ms = new MemoryStream())
                         {
+                            await fs.CopyToAsync(ms);
+                            var newFile = _directoryService.GetFileInformation(tmpFileName);
                             
-                        });
-                    } 
+                            newFile.Path = newFile.Path.Replace(_web.WebRootPath, string.Empty);
+                            return View(newFile);
+                        }
+                    }
                 }
             }
 
