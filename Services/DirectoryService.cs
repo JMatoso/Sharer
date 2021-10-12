@@ -71,7 +71,22 @@ namespace Sharer.Services
 
             foreach (var item in filesInTheFolder)
             {
-                var file = new FileInfo(item);
+                var file = GetFileInformation(item);
+                dirs.Files.Add(file);
+            }
+
+            dirs.Folders.OrderBy(f => f.Title);
+            dirs.Files.OrderBy(f => f.Title);
+
+            return dirs;
+        }
+
+        public FileInformation GetFileInformation(string path)
+        {
+            var file = new FileInfo(path);
+            
+            if(file.Exists)
+            {
                 var type = new Types();
                 var docType = new DocTypes();
                 var fileFormats = new FileFormats();
@@ -108,7 +123,7 @@ namespace Sharer.Services
                     isPlayable = false;
                 }
 
-                dirs.Files.Add(new()
+                return new FileInformation()
                 {
                     Title = file.Name.Replace(file.Extension, ""),
                     Path = file.FullName.Contains(_shared.SharedFolder) || 
@@ -124,13 +139,10 @@ namespace Sharer.Services
                     IsReadOnly = file.IsReadOnly,
                     CreationTime = file.CreationTime,
                     LastAccessTime = file.LastAccessTime
-                });
+                };
             }
 
-            dirs.Folders.OrderBy(f => f.Title);
-            dirs.Files.OrderBy(f => f.Title);
-
-            return dirs;
+            return null;
         }
 
         public Directories GetFilterDirectories(string path, Predicate<FileInformation> match)

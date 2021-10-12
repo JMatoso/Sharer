@@ -3,6 +3,7 @@ namespace Sharer.Options
     public class SharedFolders
     {
         public string SharedFolder { get; set; }
+        public string TempFolder { get; set; }
         public string Images { get; set; }
         public string Videos { get; set; }
         public string Audio { get; set; }

@@ -1,0 +1,8 @@
+@model Sharer.Models.FileInformation
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<img src="@Model.Path" alt="">
+<video src="@Model.Path" controls muted></video>
+<audio src="@Model.Path" controls muted></audio>
