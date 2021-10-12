@@ -1,8 +1,6 @@
 @using Newtonsoft.Json
 @model Sharer.Models.Directories
 
-
-
 <script>
 
 "use strict";
@@ -13,9 +11,6 @@ var files = null
 function RetrieveData(jsonFolders, jsonFiles){ 
     folders = jsonFolders
     files = jsonFiles
-
-    console.log(folders)
-    console.log(files)
 }
 
 var filesPlace = document.getElementById("filesPlace")
@@ -41,21 +36,18 @@ function Search(input){
         foldersResults = folders
         filesResults = files
     }
-    
-    console.log(foldersResults)
-    console.log(filesResults)
 
     let f1Places
 
     for (const e of foldersResults) {
         if(f1Places == null)
-            f1Places = "<div class='col-md-2 mt-2' onclick='OpenFolder('path')'>"
+            f1Places = `<div class="col-md-2 mt-2" onclick="OpenFolder('${window.btoa(e.Path)}')">`
         else
-            f1Places += "<div class='col-md-2 mt-2' onclick='OpenFolder('path')'>"
+            f1Places += `<div class='col-md-2 mt-2' onclick="OpenFolder('${window.btoa(e.Path)}')">`
 
         f1Places += "<div class='folder'>"
         f1Places += '<span><span class="feather-bg" data-feather="folder"></span></span>' 
-        f1Places += "<h6 class='text-break'>" + e.Title + "</h6></div>"
+        f1Places += `<h6 class='text-break'>${e.Title}</h6></div>`
         f1Places += "</div>"
     }
     
