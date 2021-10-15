@@ -42,7 +42,8 @@ namespace Sharer
             Init.CreateDefaultFolders(new[]
             {
                 Path.Combine(env.WebRootPath, "SharedFolders/"),
-                Path.Combine(env.WebRootPath, "SharedFolders/Uploads/")
+                Path.Combine(env.WebRootPath, "SharedFolders/Uploads/"),
+                Path.Combine(env.ContentRootPath, "Data/")
             });
 
             app.UseHttpsRedirection();

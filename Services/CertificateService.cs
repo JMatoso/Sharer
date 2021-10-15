@@ -52,6 +52,7 @@ namespace Sharer.Services
             cert.Subject = dn;
             cert.Issuer = dn; // the issuer and the subject are the same
             cert.NotBefore = DateTime.Now;
+
             // this cert expires immediately. Change to whatever makes sense for you
             cert.NotAfter = DateTime.UtcNow.AddDays(31);
             cert.X509Extensions.Add((CX509Extension)eku); // add the EKU
@@ -63,9 +64,11 @@ namespace Sharer.Services
             enroll.InitializeFromRequest(cert); // load the certificate
             enroll.CertificateFriendlyName = subjectName; // Optional: add a friendly name
             string csr = enroll.CreateRequest(); // Output the request in base64
+
             // and install it back as the response
             enroll.InstallResponse(InstallResponseRestrictionFlags.AllowUntrustedCertificate,
                 csr, EncodingType.XCN_CRYPT_STRING_BASE64, ""); // no password
+                
             // output a base64 encoded PKCS#12 so we can import it back to the .Net security classes
             var base64encoded = enroll.CreatePFX("", // no password, this is for internal consumption
                 PFXExportOptions.PFXExportChainWithRoot);

@@ -60,7 +60,7 @@ namespace Sharer.Controllers
                         {
                             dirs.SharedFolders.Add(new FolderInformation()
                             {
-                                Title = folder.Name,
+                                Title = item.FolderName,
                                 Path = folder.FullName,
                                 Size = string.Empty,
                                 IsReadOnly = false,

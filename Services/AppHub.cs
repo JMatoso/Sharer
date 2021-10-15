@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Sharer.Models;
+using System.Linq;
 using Sharer.Options;
 
 namespace Sharer.Services
@@ -16,6 +17,7 @@ namespace Sharer.Services
     {
         Task BadRequest(string message);
         Task Successful(string message, object additinalData);
+        Task UploadAsync(IFormFile data);
     }
 
     public class AppHub : Hub<IAppHub>
@@ -59,13 +61,18 @@ namespace Sharer.Services
                         FolderPath = path
                     });
 
-                    FileOperationService.SaveFile(pathsSaved, pathsFolder);
-
-                    Clients.All.Successful("Folder has been added to Shared Folders.", new SavedPath
+                    if(!pathsSaved.Any(x => x.FolderPath.Equals(path)))
                     {
-                        FolderName = name,
-                        FolderPath = path
-                    });
+                        FileOperationService.SaveFile(pathsSaved, pathsFolder);
+
+                        Clients.All.Successful("Folder has been added to Shared Folders.", new SavedPath
+                        {
+                            FolderName = name,
+                            FolderPath = path
+                        });
+                    }
+
+                    Clients.All.BadRequest("Folder already shared.");
                 }
                 else
                 {

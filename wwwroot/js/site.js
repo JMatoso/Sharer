@@ -22,7 +22,7 @@ function ShowToast(message, status = "#FFFFFF", dismissible = true, duration = 5
 }
 
 function OpenFolder(path){
-    let url = "/sharing/folder?folderPath=" + path.replace("\"", "-")
+    let url = "/sharing/folder?folderPath=" + path
     location .href = url
 } 
 
@@ -53,7 +53,7 @@ function StartHub(addr){
     connection = new signalR.HubConnectionBuilder()
         .withUrl(addr + "/appHub")
         .withHubProtocol(new signalR.protocols.msgpack.MessagePackHubProtocol())
-        .configureLogging(signalR.LogLevel.Information)
+        .configureLogging(signalR.LogLevel.Warning)
         .build()
         
     async function start(){
@@ -82,6 +82,8 @@ $("#saveFolder").click(() => {
         console.error(err.toString())
         ShowToast("Something went wrong, try again!", "danger")
     })
+
+    $("#closeModal").trigger('click')
 })
 
 $("#uploadButton").click(() => { $('#fileInput').trigger('click') })

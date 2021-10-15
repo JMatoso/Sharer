@@ -44,16 +44,19 @@ namespace Sharer.Services
             {
                 var folder = new DirectoryInfo(item);
 
-                dirs.Folders.Add(new FolderInformation()
+                if(!folder.Name.StartsWith('.'))
                 {
-                    Title = folder.Name,
-                    Path = folder.FullName,
-                    Size = string.Empty,
-                    IsReadOnly = false,
-                    Root = folder.Root.FullName,
-                    CreationTime = folder.CreationTime,
-                    LastAccessTime = folder.LastAccessTime
-                });
+                    dirs.Folders.Add(new FolderInformation()
+                    {
+                        Title = folder.Name,
+                        Path = folder.FullName,
+                        Size = string.Empty,
+                        IsReadOnly = false,
+                        Root = folder.Root.FullName,
+                        CreationTime = folder.CreationTime,
+                        LastAccessTime = folder.LastAccessTime
+                    });
+                }
             }
 
             dirs.Folders.OrderBy(f => f.Title);
@@ -108,23 +111,26 @@ namespace Sharer.Services
                     isPlayable = false;
                 }
 
-                dirs.Files.Add(new()
+                if(!file.Name.StartsWith('.'))
                 {
-                    Title = file.Name.Replace(file.Extension, ""),
-                    Path = file.FullName.Contains(_shared.SharedFolder) || 
-                        file.FullName.Contains(_shared.Uploads) ? 
-                        file.FullName.Replace(_web.WebRootPath, "") :
-                        file.FullName,
-                    Type = type,
-                    DocType = docType,
-                    IsPlayable = isPlayable,
-                    Extension = file.Extension,
-                    Minutes = 0,
-                    Size = FileOperationService.ConvertFromBytes(file.Length),
-                    IsReadOnly = file.IsReadOnly,
-                    CreationTime = file.CreationTime,
-                    LastAccessTime = file.LastAccessTime
-                });
+                    dirs.Files.Add(new()
+                    {
+                        Title = file.Name.Replace(file.Extension, ""),
+                        Path = file.FullName.Contains(_shared.SharedFolder) || 
+                            file.FullName.Contains(_shared.Uploads) ? 
+                            file.FullName.Replace(_web.WebRootPath, "") :
+                            file.FullName,
+                        Type = type,
+                        DocType = docType,
+                        IsPlayable = isPlayable,
+                        Extension = file.Extension,
+                        Minutes = 0,
+                        Size = FileOperationService.ConvertFromBytes(file.Length),
+                        IsReadOnly = file.IsReadOnly,
+                        CreationTime = file.CreationTime,
+                        LastAccessTime = file.LastAccessTime
+                    });
+                }
             }
 
             dirs.Folders.OrderBy(f => f.Title);
