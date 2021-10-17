@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Sharer.Extensions;
 using Sharer.Helpers;
 using Sharer.Models;
 using Sharer.Options;
@@ -44,31 +45,19 @@ namespace Sharer.Controllers
             string pathsFolder = Path.Combine(_web.ContentRootPath, _sys.PathsData);
             if(_directoryService.Exists(pathsFolder))
             {
-                var pathsSaved = new List<SavedPath>();
-                var content = FileOperationService
-                    .ReadFile(pathsFolder);
+                var savedPaths = new List<SavedPath>();
+                var content = FileOperationService.ReadFile(pathsFolder);
 
                 if(content != null)
                 {
-                    pathsSaved = JsonConvert.DeserializeObject<List<SavedPath>>(content);
+                    savedPaths = JsonConvert.DeserializeObject<List<SavedPath>>(content);
 
-                    foreach (var item in pathsSaved)
+                    foreach (var item in savedPaths)
                     {
                         var folder = new DirectoryInfo(item.FolderPath);
 
                         if(_directoryService.Exists(pathsFolder))
-                        {
-                            dirs.SharedFolders.Add(new FolderInformation()
-                            {
-                                Title = item.FolderName,
-                                Path = folder.FullName,
-                                Size = string.Empty,
-                                IsReadOnly = false,
-                                Root = folder.Root.FullName,
-                                CreationTime = folder.CreationTime,
-                                LastAccessTime = folder.LastAccessTime
-                            });
-                        }
+                            dirs.SharedFolders.Add(Converter.ToFolderInformation(folder, item.FolderName));
                     }
                 }
             }
@@ -116,21 +105,23 @@ namespace Sharer.Controllers
 
         [HttpGet]
         [Route("/sharing/play")]
-        public IActionResult Play([FromQuery]string file)
+        public IActionResult Play([FromQuery]string path)
         {
-            if(!string.IsNullOrEmpty(file))
+            if(!string.IsNullOrEmpty(path))
             {
-                string formattedUrl = (new UrlParser()).Base64Decode(file);
+                string formattedUrl = (new UrlParser()).Base64Decode(path);
 
                 if(_directoryService.Exists(formattedUrl))
                 {
-                    using(var fs = System.IO.File.Open(formattedUrl, FileMode.Open, FileAccess.Write, FileShare.None))
-                    {
-                        return View(new FileInformation
-                        {
-                            
-                        });
-                    } 
+                    var file = _directoryService.GetFileInfo(formattedUrl);
+
+                    file.Path = 
+                        file.Path.Contains(_shared.SharedFolder.Replace('/', Path.DirectorySeparatorChar)) || 
+                        file.Path.Contains(_shared.Uploads.Replace('/', Path.DirectorySeparatorChar)) ? 
+                        file.Path.Replace(_web.WebRootPath, "") :
+                        file.Path;
+                        
+                    return View(file);
                 }
             }
 

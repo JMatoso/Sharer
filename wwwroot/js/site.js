@@ -38,11 +38,11 @@ function SetClipboardText(input){
 }
 
 $(window).bind('scroll', () => {
-    if($(window).scrollTop() > 20){
+    if($(window).scrollTop() > 20)
         $('.custom-nav').addClass("nav-saturated ")
-    }else{
+    else
         $('.custom-nav').removeClass("nav-saturated ")
-    }
+    
 })
 
 /* SignalR

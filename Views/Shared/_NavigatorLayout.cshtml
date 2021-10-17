@@ -105,10 +105,6 @@
                     </div>
                     @{
                         string folder = item.Path;
-                        if(!folder.Contains("SharedFolders/"))
-                        {
-                            folder = $"file:///{folder}";
-                        }
                     }
                     <div class="col-8">
                         <div aria-haspopup="true" data-toggle="tooltip" data-html="true" 
@@ -157,7 +153,7 @@
 
                                     @if(item.IsPlayable)
                                     {
-                                        <a href="@folder" class="dropdown-item text-success" target="_blank" rel="noopener noreferrer">
+                                        <a asp-action="play" asp-controller="sharing" asp-route-path="@Model.UrlParser.Base64Encode(item.Path)" class="dropdown-item text-success" target="_blank" rel="noopener noreferrer">
                                             <span class="feather-10" data-feather="play-circle"></span>
                                             <span>Play File</span>
                                         </a>

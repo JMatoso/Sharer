@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
+using Sharer.Extensions;
 using Sharer.Models;
 using Sharer.Options;
 
@@ -11,7 +12,9 @@ namespace Sharer.Services
     {
         private readonly SharedFolders _shared;
         private readonly IWebHostEnvironment _web;
-        public DirectoryService(SharedFolders shared, IWebHostEnvironment web)
+        public DirectoryService(
+            SharedFolders shared, 
+            IWebHostEnvironment web)
         {
             _shared = shared;
             _web = web;
@@ -45,18 +48,7 @@ namespace Sharer.Services
                 var folder = new DirectoryInfo(item);
 
                 if(!folder.Name.StartsWith('.'))
-                {
-                    dirs.Folders.Add(new FolderInformation()
-                    {
-                        Title = folder.Name,
-                        Path = folder.FullName,
-                        Size = string.Empty,
-                        IsReadOnly = false,
-                        Root = folder.Root.FullName,
-                        CreationTime = folder.CreationTime,
-                        LastAccessTime = folder.LastAccessTime
-                    });
-                }
+                    dirs.Folders.Add(Converter.ToFolderInformation(folder));
             }
 
             dirs.Folders.OrderBy(f => f.Title);
@@ -74,69 +66,63 @@ namespace Sharer.Services
 
             foreach (var item in filesInTheFolder)
             {
-                var file = new FileInfo(item);
-                var type = new Types();
-                var docType = new DocTypes();
-                var fileFormats = new FileFormats();
-                bool isPlayable = true;
-
-                if(fileFormats.Audio.Exists(x => x.Equals(file.Extension.ToLower())))
-                    type = Types.Audio;
-                else if(fileFormats.Compressed.Exists(x => x.Equals(file.Extension.ToLower())))
-                {
-                    type = Types.Compressed;
-                    isPlayable = false;
-                }
-                else if(fileFormats.Documents.Exists(x => x.Equals(file.Extension.ToLower())))
-                {
-                    type = Types.Document;
-                    docType = Enum.Parse<DocTypes>(file.Extension.Replace(".", ""));
-                    isPlayable = false;
-
-                    if(file.Extension.ToLower().Equals(".txt") || file.Extension.ToLower().Equals(".pdf"))
-                        isPlayable = true;
-                }
-                else if(fileFormats.Images.Exists(x => x.Equals(file.Extension.ToLower())))
-                    type = Types.Image;
-                else if(fileFormats.Videos.Exists(x => x.Equals(file.Extension.ToLower())))
-                    type = Types.Video;
-                else if(fileFormats.Applications.Exists(x => x.Equals(file.Extension.ToLower())))
-                {
-                    type = Types.Application;
-                    isPlayable = false;
-                }
-                else
-                {
-                    type = Types.Other;
-                    isPlayable = false;
-                }
-
-                if(!file.Name.StartsWith('.'))
-                {
-                    dirs.Files.Add(new()
-                    {
-                        Title = file.Name.Replace(file.Extension, ""),
-                        Path = file.FullName.Contains(_shared.SharedFolder) || 
-                            file.FullName.Contains(_shared.Uploads) ? 
-                            file.FullName.Replace(_web.WebRootPath, "") :
-                            file.FullName,
-                        Type = type,
-                        DocType = docType,
-                        IsPlayable = isPlayable,
-                        Extension = file.Extension,
-                        Minutes = 0,
-                        Size = FileOperationService.ConvertFromBytes(file.Length),
-                        IsReadOnly = file.IsReadOnly,
-                        CreationTime = file.CreationTime,
-                        LastAccessTime = file.LastAccessTime
-                    });
-                }
+                var file = GetFileInfo(item);
+                if(file != null)
+                    dirs.Files.Add(file);
             }
 
             dirs.Folders.OrderBy(f => f.Title);
             dirs.Files.OrderBy(f => f.Title);
 
             return dirs;
+        }
+
+        public FileInformation GetFileInfo(string path)
+        {
+            var file = new FileInfo(path);
+            var type = new Types();
+            var docType = new DocTypes();
+            var fileFormats = new FileFormats();
+            bool isPlayable = true;
+
+            if(fileFormats.Audio.Exists(x => x.Equals(file.Extension.ToLower())))
+                type = Types.Audio;
+            else if(fileFormats.Compressed.Exists(x => x.Equals(file.Extension.ToLower())))
+            {
+                type = Types.Compressed;
+                isPlayable = false;
+            }
+            else if(fileFormats.Documents.Exists(x => x.Equals(file.Extension.ToLower())))
+            {
+                type = Types.Document;
+                docType = Enum.Parse<DocTypes>(file.Extension.Replace(".", ""));
+                isPlayable = false;
+
+                if(file.Extension.ToLower().Equals(".txt") || file.Extension.ToLower().Equals(".pdf"))
+                    isPlayable = true;
+            }
+            else if(fileFormats.Images.Exists(x => x.Equals(file.Extension.ToLower())))
+                type = Types.Image;
+            else if(fileFormats.Videos.Exists(x => x.Equals(file.Extension.ToLower())))
+                type = Types.Video;
+            else if(fileFormats.Applications.Exists(x => x.Equals(file.Extension.ToLower())))
+            {
+                type = Types.Application;
+                isPlayable = false;
+            }
+            else
+            {
+                type = Types.Other;
+                isPlayable = false;
+            }
+
+            if(!file.Name.StartsWith('.'))
+            {
+                return Converter
+                    .ToFileInformation(file, type, docType, isPlayable, _shared.SharedFolder, _shared.Uploads, _web.WebRootPath);
+            }
+
+            return null;
         }
 
         public Directories GetFilterDirectories(string path, Predicate<FileInformation> match)
