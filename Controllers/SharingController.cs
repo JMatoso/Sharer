@@ -34,9 +34,8 @@ namespace Sharer.Controllers
         }
 
         [Route("/")]
-        [Route("/sharing/")]
-        [Route("/sharing/home")]
-        [Route("/sharing/index")]
+        [Route("/home")]
+        [Route("/index")]
         public IActionResult Index()
         {
             var dirs = _directoryService
@@ -66,12 +65,12 @@ namespace Sharer.Controllers
         }
 
         [HttpGet]
-        [Route("/sharing/folder")]
-        public IActionResult Folder([FromQuery]string folderPath) 
+        [Route("/folder")]
+        public IActionResult Folder([FromQuery]string path) 
         {
-            if(!string.IsNullOrEmpty(folderPath))
+            if(!string.IsNullOrEmpty(path))
             {
-                string formattedUrl = (new UrlParser()).Base64Decode(folderPath);
+                string formattedUrl = (new UrlParser()).Base64Decode(path);
 
                 if(_directoryService.Exists(formattedUrl, true))
                 {
@@ -89,7 +88,7 @@ namespace Sharer.Controllers
         }
 
         [HttpPost]
-        [Route("/sharing/uploads")]
+        [Route("/uploads")]
         public async Task<IActionResult> Uploads(IFormFile fileInput) 
         {
             var upload = new UploadService(_web, _shared);
@@ -104,7 +103,7 @@ namespace Sharer.Controllers
         }
 
         [HttpGet]
-        [Route("/sharing/play")]
+        [Route("/play")]
         public IActionResult Play([FromQuery]string path)
         {
             if(!string.IsNullOrEmpty(path))
@@ -128,10 +127,10 @@ namespace Sharer.Controllers
             return RedirectToAction(nameof(NotFoundAction));
         }
 
-        [Route("/sharing/notfound")]
+        [Route("/notfound")]
         public IActionResult NotFoundAction() => View();
 
-        [Route("/sharing/error")]
+        [Route("/error")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }

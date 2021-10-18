@@ -7,7 +7,7 @@ function LoadAnimation() {
     }, 300)
 }
 
-function ShowToast(message, status = "#FFFFFF", dismissible = true, duration = 5000){
+function ShowToast(message, status = "info", dismissible = true, duration = 5000){
     Snackbar.show({ 
         actionTextColor: status, 
         pos: 'bottom-left',
@@ -22,7 +22,7 @@ function ShowToast(message, status = "#FFFFFF", dismissible = true, duration = 5
 }
 
 function OpenFolder(path){
-    let url = "/sharing/folder?folderPath=" + path
+    let url = "/folder?path=" + path
     location .href = url
 } 
 
