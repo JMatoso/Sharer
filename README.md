@@ -1,2 +1,2 @@
 # Sharer
-Sharer, online file explorer. A way to share your files in the computer with others devices using an hotspot. 
+Sharer, online file explorer. Sharing your files in the computer with others devices using local network and FTP protocol. 
